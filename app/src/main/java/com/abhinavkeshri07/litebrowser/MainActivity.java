@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        webView.loadUrl(currentUri);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 webView.reload();
-                webView.loadUrl("https://www.google.com/");
+
             }
         });
         webView.setDownloadListener(new DownloadListener() {
