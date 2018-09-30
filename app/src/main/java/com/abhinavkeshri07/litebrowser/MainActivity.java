@@ -1,7 +1,9 @@
 package com.abhinavkeshri07.litebrowser;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.PersistableBundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,7 +23,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     ProgressBar  progressBar;
-    ImageView imageView;
+
     WebView webView;
     LinearLayout linearLayout;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         progressBar = findViewById(R.id.myProgressBar);
-        imageView = findViewById(R.id.myImageView);
+
         webView = findViewById(R.id.myWebView);
         linearLayout = findViewById(R.id.progress_bar_linear_layout);
         swipeRefreshLayout = findViewById(R.id.swiperefresher);
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
-                imageView.setImageBitmap(icon);
+
             }
         });
 
@@ -86,7 +89,19 @@ public class MainActivity extends AppCompatActivity {
                 webView.loadUrl("https://www.google.com/");
             }
         });
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                DownloadManager.Request myRequest = new DownloadManager.Request(Uri.parse(url));
+                myRequest.allowScanningByMediaScanner();
+                myRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                DownloadManager myManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+                myManager.enqueue(myRequest);
 
+
+
+            }
+        });
     }
 
     @Override
